@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>HTML + CSS</title>
+    <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+    <div class="header">
+        <h1>Todo List!</h1>
+        <button id="newToDoBtn">New ToDo</button>
+        <button id="darkMode">Dark Mode</button>
+    </div>
+    <div class="listNodes">
+        <h3 class="listNodeName">Home</h3>
+        <button class="listNodeItems" id="addNewList">
+            <h3>+</h3>
+        </button>
+    </div>
+
+    <div class="inputDiv" id="input-container">
+        <input id="text-field" type="text" placeholder="Try typing I need to visit dentist" />
+        <button id="add-button">Add</button>
+    </div>
+    <div class="currentListContainer home" id="todo-container">
+
+        <div class="todoText">
+            <input type="checkbox" class="checkButton">
+            <p>HOME</p>
+        </div>
+
+        <div class="todoText">
+            <input type="checkbox" class="checkButton" id="avy2">
+            <p>DEMO1</p>
+        </div>
+
+        <div class="todoText">
+            <input type="checkbox" class="checkButton" id="avy2">
+            <p>DEMO2</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
