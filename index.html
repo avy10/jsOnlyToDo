@@ -6,7 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>HTML + CSS</title>
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="css/listNodes.css" />
+    <link rel="stylesheet" href="css/listContainer.css" />
+    <link rel="stylesheet" href="css/todoItems.css" />
 </head>
 
 <body>
@@ -16,7 +19,18 @@
         <button id="darkMode">Dark Mode</button>
     </div>
     <div class="listNodes">
-        <h3 class="listNodeName">Home</h3>
+        <div class="listNodeItems">
+            <h3 class="listNodeName">Home</h3>
+        </div>
+        <div class="listNodeItems">
+            <h3>Demo List 1</h3>
+        </div>
+        <div class="listNodeItems">
+            <h3>Demo List 2</h3>
+        </div>
+        <div class="listNodeItems">
+            <h3>Demo List 3</h3>
+        </div>
         <button class="listNodeItems" id="addNewList">
             <h3>+</h3>
         </button>
@@ -27,24 +41,43 @@
         <button id="add-button">Add</button>
     </div>
     <div class="currentListContainer home" id="todo-container">
+        <div class="todoItem navigationJS" id="todo0">
+            <div class="checkButtonDiv">
+                <input type="checkbox" class="checkButton" id="avy">
+                <button>❌</button>
+            </div>
 
-        <div class="todoText">
-            <input type="checkbox" class="checkButton">
-            <p>HOME</p>
+            <div class="todoText">
+                <p>HOME</p>
+            </div>
         </div>
 
-        <div class="todoText">
-            <input type="checkbox" class="checkButton" id="avy2">
-            <p>DEMO1</p>
+        <div class="todoItem navigationJS" id="todo1">
+            <div class="checkButtonDiv">
+                <input type="checkbox" class="checkButton" id="avy2">
+                <button>❌</button>
+            </div>
+            <div class="todoText">
+                <p>DEMO1</p>
+            </div>
         </div>
 
-        <div class="todoText">
-            <input type="checkbox" class="checkButton" id="avy2">
-            <p>DEMO2</p>
+
+        <div class="todoItem navigationJS" id="todo2">
+            <div class="checkButtonDiv">
+                <input type="checkbox" class="checkButton" id="avy3">
+                <button>❌</button>
+            </div>
+            <div class="todoText">
+                <p>DEMO2</p>
+            </div>
+
         </div>
+
     </div>
 
     <script src="script.js"></script>
+    <script src="listNodeScript.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,21 @@
+.currentListContainer{
+    display: block;
+    margin: 5px 30px;
+    padding: 10px 20px;
+
+}
+
+.todoItem{
+    display: flex;
+    justify-content: flex-start;
+    column-gap: 2vw;
+    align-items: center;
+    border: 2px solid aqua;
+    border-radius: 25px;
+    margin: 2vh 1vw;
+    padding: 2vh 1vw;
+}
+
+.todoText p{
+    font-size: 1.15em;
+}

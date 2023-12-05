@@ -1,0 +1,51 @@
+.listNodes{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    column-gap: 25px;
+    margin: 2vh 2vw;
+    padding: 0.5vh 0.5vw;
+    height: 35px;
+    border: 2px solid black;
+    height: 6vh;
+    overflow-x: scroll;
+}
+
+.listNodeItems{
+    display: flex;
+    column-gap: 0;
+    border: 2px solid aqua;
+    align-items: center;
+    width: auto;
+}
+
+
+
+
+#addNewList{
+    /* position: fixed;
+    right: 2.5vw; */
+    margin-left: 5px;
+    background-color: chartreuse;
+    width: 25px;
+    
+    display: flex;
+    justify-content: center;
+}
+
+
+.inputDiv{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    column-gap: 20px;
+    margin: 3vh 5vw;
+    margin-bottom: 0.5vh;
+    height: 30px;
+}
+
+.inputDiv input{
+    width: 40vw;
+}
+
