@@ -1,3 +1,6 @@
+
+
+
 .listNodes{
     position: relative;
     display: flex;
@@ -8,18 +11,40 @@
     padding: 0.5vh 0.5vw;
     height: 35px;
     border: 2px solid black;
+    border-radius: 20px;
+    background-color: ba;
     height: 6vh;
-    overflow-x: scroll;
+    /* overflow-x: scroll; */
+}
+.listNodes button {
+    background-color: white;
+    
 }
 
 .listNodeItems{
     display: flex;
-    column-gap: 0;
+    column-gap: 2px;
     border: 2px solid aqua;
     align-items: center;
     width: auto;
+    border-radius: 10%;
 }
 
+.listNodeItems .showList{
+    border: none;
+    width: fit-content;
+    padding: 10px;
+}
+.listNodeItems .removeListNode{
+    /* border-left: none; */
+    margin-left: 5px;
+    /* background-color: rgba(175, 18, 18, 0.158); */
+    
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    border: none;
+}
 
 
 
@@ -27,9 +52,10 @@
     /* position: fixed;
     right: 2.5vw; */
     margin-left: 5px;
-    background-color: chartreuse;
-    width: 25px;
-    
+    background-color: rgba(127, 255, 0, 0.5);
+    width: 35px;
+    border-radius: 5px;
+    border-color: darkblue;
     display: flex;
     justify-content: center;
 }
