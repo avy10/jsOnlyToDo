@@ -16,3 +16,4 @@ darkModeEl.addEventListener("click", function(){
 });
 
 	
+window.alert("Ignore Home tab. Create a new tab using green + button and explore functionality");
