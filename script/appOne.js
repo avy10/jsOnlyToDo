@@ -302,15 +302,15 @@ addToDoIFElem.addEventListener("keydown", function (keyEvent) {
 				const prevIndex = extractIndex(tempID, 4);
 				console.log("prevIndex is ", prevIndex);
 
-				if(prevIndex === 0){
-					console.log("0th");
-					completedContainer.removeChild(temp);
-					currentContainerOnDisplay.insertBefore(temp, toDoItemsInCurrentContainerHC[0]);
-				} else if(notCompHC.length === 0) {
+				if(notCompHC.length === 0) {
 					console.log("1st");
 					currentContainerOnDisplay.insertBefore(temp,completedContainer);
 					newToDoItemBox.classList.remove("comp");
 					newToDoItemBox.classList.add("notComp");
+				} else if(prevIndex === 0){
+					console.log("0th");
+					completedContainer.removeChild(temp);
+					currentContainerOnDisplay.insertBefore(temp, toDoItemsInCurrentContainerHC[0]);
 				} else if(prevIndex === notCompHC.length){
 					console.log("2nd");
 					//VERIFIED
@@ -354,9 +354,22 @@ addToDoIFElem.addEventListener("keydown", function (keyEvent) {
 					newToDoItemBox.classList.remove("comp");
 					newToDoItemBox.classList.add("notComp");
 				} else if(prevIndex > notCompHC.length){
+
+					const lastChild = notCompHC[notCompHC.length-1];
+					console.log(lastChild);
+					const lastChildP = +lastChild.getAttribute("position");
+					console.log("childzeroP for 4th =>", lastChildP, "..index", prevIndex);
+					completedContainer.removeChild(temp);
+					if(prevIndex > lastChildP) {
+						console.log("uno");
+						currentContainerOnDisplay.insertBefore(temp, completedContainer);
+					} else if(prevIndex < lastChildP){
+						console.log("dos");
+						currentContainerOnDisplay.insertBefore(temp,  lastChild);
+					}
+
+
 					console.log("4th");
-					const insertHereFFS = notCompHC[notCompHC.length - 1];
-					currentContainerOnDisplay.insertBefore(temp, completedContainer);
 					newToDoItemBox.classList.remove("comp");
 					newToDoItemBox.classList.add("notComp");
 				}
