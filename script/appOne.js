@@ -274,16 +274,21 @@ addToDoIFElem.addEventListener("keydown", function (keyEvent) {
 		newUpBtn.classList.add("moveUpBtn");
 		newUpBtn.textContent = "⬆️";
 		newMoveDiv.appendChild(newUpBtn);
-
+		// EL DONE
 
 		const newDownBtn = document.createElement("button");
 		newDownBtn.classList.add("moveDownBtn");
 		newDownBtn.textContent = "⬇️";
 		newMoveDiv.appendChild(newDownBtn);
-
+		// EL DONE
 
 		newDeleteBtn.addEventListener("click", function () {
-			currentContainer.removeChild(newToDoItemBox);
+			console.log("AVY WATHC THIS,,", currentContainer.contains(newToDoItemBox));
+			if(completedContainer.contains(newToDoItemBox)){
+				completedContainer.removeChild(newToDoItemBox);
+			} else {
+				currentContainer.removeChild(newToDoItemBox);
+			}
 			idUpdateTODOS(currentContainer);
 		});
 
@@ -411,7 +416,7 @@ addToDoIFElem.addEventListener("keydown", function (keyEvent) {
 		newDownBtn.addEventListener("click", function(){
 			const currentPosition = +newToDoItemBox.getAttribute("position");
 			if(currentPosition === notCompHC.length-1 ){
-
+				
 			} else {
 				const elementBelowCurrent = notCompHC[currentPosition+1];
 				console.log(elementBelowCurrent);
