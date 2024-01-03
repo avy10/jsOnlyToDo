@@ -251,10 +251,12 @@ addToDoIFElem.addEventListener("keydown", function (keyEvent) {
 		newCheckBoxInput.classList.add("checkButton");
 		newCheckBtnDiv.appendChild(newCheckBoxInput);
 		newCheckBoxInput.id = `check${toDoItemsInCurrentContainerHC.length-1}`;
+		// EL DONE
 
 		const newDeleteBtn = document.createElement("button");
 		newDeleteBtn.textContent = "❌";
 		newCheckBtnDiv.appendChild(newDeleteBtn);
+		// EL DONE
 
 		const newToDoTextDiv = document.createElement("div");
 		newToDoItemBox.appendChild(newToDoTextDiv);
@@ -273,10 +275,12 @@ addToDoIFElem.addEventListener("keydown", function (keyEvent) {
 		newUpBtn.textContent = "⬆️";
 		newMoveDiv.appendChild(newUpBtn);
 
+
 		const newDownBtn = document.createElement("button");
 		newDownBtn.classList.add("moveDownBtn");
 		newDownBtn.textContent = "⬇️";
 		newMoveDiv.appendChild(newDownBtn);
+
 
 		newDeleteBtn.addEventListener("click", function () {
 			currentContainer.removeChild(newToDoItemBox);
@@ -381,6 +385,50 @@ addToDoIFElem.addEventListener("keydown", function (keyEvent) {
 
 			// let toDoItemIndex = extractIndex()
 		});
+
+		newUpBtn.addEventListener("click", function(){
+			const currentPosition = +newToDoItemBox.getAttribute("position");
+			if(currentPosition === 0 ){
+
+			} else {
+				const elementAboveCurrent = notCompHC[currentPosition-1];
+				console.log(elementAboveCurrent);
+				console.log(newToDoItemBox.id, typeof newToDoItemBox.id);
+				currentContainer.removeChild(newToDoItemBox);
+				currentContainer.insertBefore(newToDoItemBox, elementAboveCurrent);
+				newToDoItemBox.removeAttribute("id");
+				newToDoItemBox.removeAttribute("position");
+				elementAboveCurrent.removeAttribute("id");
+				elementAboveCurrent.removeAttribute("position");
+				
+				newToDoItemBox.id = `todo${currentPosition - 1}`;
+				elementAboveCurrent.id = `todo${currentPosition}`;
+				newToDoItemBox.setAttribute("position", currentPosition-1)
+				elementAboveCurrent.setAttribute("position", currentPosition)
+			}
+		});
+
+		newDownBtn.addEventListener("click", function(){
+			const currentPosition = +newToDoItemBox.getAttribute("position");
+			if(currentPosition === notCompHC.length-1 ){
+
+			} else {
+				const elementBelowCurrent = notCompHC[currentPosition+1];
+				console.log(elementBelowCurrent);
+				console.log(newToDoItemBox.id, typeof newToDoItemBox.id);
+				currentContainer.removeChild(elementBelowCurrent);
+				currentContainer.insertBefore(elementBelowCurrent, newToDoItemBox);
+				newToDoItemBox.removeAttribute("id");
+				newToDoItemBox.removeAttribute("position");
+				elementBelowCurrent.removeAttribute("id");
+				elementBelowCurrent.removeAttribute("position");
+				
+				newToDoItemBox.id = `todo${currentPosition + 1}`;
+				elementBelowCurrent.id = `todo${currentPosition}`;
+				newToDoItemBox.setAttribute("position", currentPosition+1)
+				elementBelowCurrent.setAttribute("position", currentPosition)
+			}
+		})
 
 		addToDoIFElem.value = "";
 	} else if (keyEvent.key === "Escape") {
