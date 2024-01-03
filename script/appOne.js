@@ -39,6 +39,7 @@ const extractIndex = (str, len) => {
 bodyElem.setAttribute("customAttr", "customValue");
 
 
+
 // previous code
 const nonHiddenToDoContainer = () => {
 	let index = 0;
@@ -69,8 +70,38 @@ const hideList = () => {
 	// console.log("the hideList is executed");
 };
 
+const idUpdate = (index) => {
+	let id = index;
+	for (let i = index + 1; i < listNamesHC.length; i++) {
+		// remove the existing ids
+		listTabsHC[i].removeAttribute("id");
+		listNamesHC[i].removeAttribute("id");
+		removeListBtnHC[i].removeAttribute("id");
+		// add the new id. in new id, the number is taken from the removed element
+		listTabsHC[i].id = `show${id}`;
+		listNamesHC[i].id = `lNM${id}`;
+		removeListBtnHC[i].id = `remove${id}`;
+		id++;
+
+	}
+};
+
 //end of previous code
 
+const idUpdateTODOS = function(e){
+	let toDoHC = e.getElementsByClassName("todoItem");
+	let checkBtnHC = e.getElementsByClassName("checkButton");
+	for(let i = 0; i < toDoHC.length; i++){
+		toDoHC[i].removeAttribute("id");
+		toDoHC[i].removeAttribute("position");
+		checkBtnHC[i].removeAttribute("id");
+
+		toDoHC[i].id = `todo${i}`;
+		toDoHC[i].setAttribute("position", i);
+		checkBtnHC[i].id = `check${i}`;
+
+	}
+}
 
 
 //function which add new listNodeItems
@@ -98,8 +129,7 @@ const addingListNodeItem = () => {
 	//create h3
 	const newH3 = document.createElement("h3");
 	newH3.textContent = "New List Group";
-	newH3.classList.add("listName");
-	newH3.classList.add("hidden");
+	newH3.className = "listName hidden";
 	newH3.id = `lNM${listNamesHC.length}`;
 
 	//adding h3 to parent node
@@ -114,11 +144,11 @@ const addingListNodeItem = () => {
 	newListTab.appendChild(newTextInputField);
 
 	//creating and adding buttons
-	const newButton = document.createElement("button");
-	newButton.classList.add("removeListTab");
-	newButton.id = `remove${listTabsHC.length}`;
-	newButton.textContent = "⛔";
-	newListTab.appendChild(newButton);
+	const newRemoveTabBTN = document.createElement("button");
+	newRemoveTabBTN.classList.add("removeListTab");
+	newRemoveTabBTN.id = `remove${listTabsHC.length}`;
+	newRemoveTabBTN.textContent = "⛔";
+	newListTab.appendChild(newRemoveTabBTN);
 
 
     // the container which will contain list specific to this list
@@ -131,9 +161,48 @@ const addingListNodeItem = () => {
 
 	// newCompletedContainer contains list of todos which have been marked as completed
 	const newCompletedContainer = document.createElement("div");
-	newCompletedContainer.classList.add("completed");
-	newCompletedContainer.classList.add("hidden");
+	newCompletedContainer.className = "completed hidden";
 	newListContainer.appendChild(newCompletedContainer);
+
+	// removeBTN EL
+	newRemoveTabBTN.addEventListener("click", function () {
+		let index = extractIndex(newRemoveTabBTN.id, 6);
+		idUpdate(index);
+		listNodesElem.removeChild(newListTab);
+		bodyElem.removeChild(newListContainer);
+	});
+
+	newListTab.addEventListener("click", function(event){
+		event.stopPropagation();
+		hideList(); // hides all the listContainer, even its own listContainer
+
+		newListContainer.classList.remove("hidden"); 
+		//now we remove the hidden from the listContainer that is specific to this h3
+
+		index = nonHiddenToDoContainer(); //because only one listContainer
+		currentContainerOnDisplay = document.getElementById(
+			`todo-container${index}`
+		);
+	})
+	
+
+	newH3.addEventListener("dblclick", function (event) {
+		event.stopPropagation();
+		newH3.classList.add("hidden");
+		newTextInputField.classList.remove("hidden");
+	});
+
+	newTextInputField.addEventListener("keydown", function (keyEvent) {
+		let input = newTextInputField.value;
+		if (keyEvent.key === "Enter" && input !== "") {
+			newH3.textContent = input;
+			newTextInputField.classList.add("hidden");
+			newH3.classList.remove("hidden");
+		} else if (keyEvent.key === "Escape") {
+			newTextInputField.classList.add("hidden");
+			newH3.classList.remove("hidden");
+		}
+	});
 
 }
 
@@ -141,4 +210,167 @@ addNewListBtn.addEventListener("click", function () {
 	hideList(); //hides all the individual list container
 
 	addingListNodeItem();
+
+	//after a new todo list is added i.e. todo tab and todo container, update index
+	index = nonHiddenToDoContainer();
+	currentContainerOnDisplay = document.getElementById(
+		`todo-container${index}`
+	);
+});
+
+
+
+addToDoIFElem.addEventListener("keydown", function (keyEvent) {
+	let text = addToDoIFElem.value;
+
+	if (keyEvent.key === "Enter" && text !== "") {
+		index = nonHiddenToDoContainer();
+		let currentContainer = currentListContainerHC[index];
+		let completedContainer = currentContainer.querySelector(".completed");
+		const notCompHC = currentContainer.getElementsByClassName("notComp");
+		const compHC = completedContainer.getElementsByClassName("comp");
+		const toDoItemsInCurrentContainerHC = currentContainer.getElementsByClassName("todoItem");
+
+		const idOfCurrentContainer = currentContainer.id;
+		// console.log("AVY LOOK AT THIS ", idOfCurrentContainer);
+
+		const newToDoItemBox = document.createElement("div");
+		newToDoItemBox.className = "todoItem navigationJS notComp"
+		newToDoItemBox.id = `todo${toDoItemsInCurrentContainerHC.length}`;
+		currentContainer.insertBefore(newToDoItemBox, completedContainer);
+		newToDoItemBox.classList.add(`TAB${idOfCurrentContainer}`)
+		newToDoItemBox.setAttribute("position", `${toDoItemsInCurrentContainerHC.length-1}`);
+
+		
+		const newCheckBtnDiv = document.createElement("div");
+		newCheckBtnDiv.classList.add("checkButtonDiv");
+		newToDoItemBox.appendChild(newCheckBtnDiv);
+
+		const newCheckBoxInput = document.createElement("input");
+		newCheckBoxInput.setAttribute("type", "checkbox");
+		newCheckBoxInput.classList.add("checkButton");
+		newCheckBtnDiv.appendChild(newCheckBoxInput);
+		newCheckBoxInput.id = `check${toDoItemsInCurrentContainerHC.length-1}`;
+
+		const newDeleteBtn = document.createElement("button");
+		newDeleteBtn.textContent = "❌";
+		newCheckBtnDiv.appendChild(newDeleteBtn);
+
+		const newToDoTextDiv = document.createElement("div");
+		newToDoItemBox.appendChild(newToDoTextDiv);
+		newToDoTextDiv.classList.add("todoText");
+
+		const newPTag = document.createElement("p");
+		newPTag.textContent = text;
+		newToDoTextDiv.appendChild(newPTag);
+
+		const newMoveDiv = document.createElement("div");
+		newMoveDiv.classList.add("moveDiv");
+		newToDoItemBox.appendChild(newMoveDiv);
+
+		const newUpBtn = document.createElement("button");
+		newUpBtn.classList.add("moveUpBtn");
+		newUpBtn.textContent = "⬆️";
+		newMoveDiv.appendChild(newUpBtn);
+
+		const newDownBtn = document.createElement("button");
+		newDownBtn.classList.add("moveDownBtn");
+		newDownBtn.textContent = "⬇️";
+		newMoveDiv.appendChild(newDownBtn);
+
+		newDeleteBtn.addEventListener("click", function () {
+			currentContainer.removeChild(newToDoItemBox);
+			idUpdateTODOS(currentContainer);
+		});
+
+		newCheckBoxInput.addEventListener("click", function () {
+			newToDoTextDiv.classList.toggle("strikeTho");
+			// let position = extractIndex(newCheckBoxInput.id, 5);
+			let position = +newToDoItemBox.getAttribute("position");
+			if (newCheckBoxInput.checked) {
+				// VERIFIED
+				currentContainerOnDisplay.removeChild(newToDoItemBox);
+				completedContainer.appendChild(newToDoItemBox);
+				if (completedContainer.childElementCount > 0) {
+					completedContainer.classList.remove("hidden");
+				}
+				newToDoItemBox.classList.add("comp");
+				newToDoItemBox.classList.remove("notComp");
+			} else if (!newCheckBoxInput.checked) {
+				const temp = newToDoItemBox;
+				const tempID = temp.id;
+				const prevIndex = extractIndex(tempID, 4);
+				console.log("prevIndex is ", prevIndex);
+
+				if(prevIndex === 0){
+					console.log("0th");
+					completedContainer.removeChild(temp);
+					currentContainerOnDisplay.insertBefore(temp, toDoItemsInCurrentContainerHC[0]);
+				} else if(notCompHC.length === 0) {
+					console.log("1st");
+					currentContainerOnDisplay.insertBefore(temp,completedContainer);
+					newToDoItemBox.classList.remove("comp");
+					newToDoItemBox.classList.add("notComp");
+				} else if(prevIndex === notCompHC.length){
+					console.log("2nd");
+					//VERIFIED
+					const lastChild = toDoItemsInCurrentContainerHC[prevIndex-1];
+					const lastChildP = +lastChild?.getAttribute("position");
+					console.log("childzeroP for 2nd", lastChildP, "index", prevIndex);
+					completedContainer.removeChild(temp);
+					if(prevIndex > lastChildP) {
+						console.log("uno");
+						currentContainerOnDisplay.insertBefore(temp, completedContainer);
+					} else if(prevIndex < lastChildP){
+						console.log("dos");
+						currentContainerOnDisplay.insertBefore(temp,  lastChild);
+					}
+					newToDoItemBox.classList.remove("comp");
+					newToDoItemBox.classList.add("notComp");
+				} else if(prevIndex < notCompHC.length){
+					console.log("3rd")
+					const childZero = toDoItemsInCurrentContainerHC[prevIndex];
+					const childPlus = toDoItemsInCurrentContainerHC[prevIndex+1];
+					const childMinus = toDoItemsInCurrentContainerHC[prevIndex-1];
+
+					const childZeroP = +childZero?.getAttribute("position");
+					const childPlusP = +childPlus?.getAttribute("position");
+					const childMinusP = +childMinus?.getAttribute("position");
+
+					if(prevIndex < childZeroP && prevIndex < childMinusP){
+						console.log("A")
+						currentContainerOnDisplay.insertBefore(temp, childMinus);
+					} else if (prevIndex < childZeroP && prevIndex > childMinusP) {
+						console.log("B")
+						currentContainerOnDisplay.insertBefore(temp, childZero);
+					} else if(prevIndex > childZeroP && prevIndex < childPlusP){
+						console.log("C")
+						currentContainerOnDisplay.insertBefore(temp, childPlus);						
+					} else if(prevIndex > childZeroP && prevIndex > childPlusP){
+						console.log("D")
+						const childPlusPlus = toDoItemsInCurrentContainerHC[prevIndex+2];
+						currentContainerOnDisplay.insertBefore(temp, childPlusPlus);
+					}
+					newToDoItemBox.classList.remove("comp");
+					newToDoItemBox.classList.add("notComp");
+				} else if(prevIndex > notCompHC.length){
+					console.log("4th");
+					const insertHereFFS = notCompHC[notCompHC.length - 1];
+					currentContainerOnDisplay.insertBefore(temp, completedContainer);
+					newToDoItemBox.classList.remove("comp");
+					newToDoItemBox.classList.add("notComp");
+				}
+
+				if (completedContainer.childElementCount == 0) {
+					completedContainer.classList.add("hidden");
+				}
+			}
+
+			// let toDoItemIndex = extractIndex()
+		});
+
+		addToDoIFElem.value = "";
+	} else if (keyEvent.key === "Escape") {
+		addToDoIFElem.value = "";
+	}
 });

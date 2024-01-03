@@ -45,3 +45,7 @@
   color: white;
   border: 0;
 }
+
+.listName{
+  min-width: 25px;
+}
