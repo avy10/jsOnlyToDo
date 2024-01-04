@@ -1,5 +1,8 @@
 # To Do App using HTML CSS and JS
 
+## Deployement :
+[GitHub Pages](https://avy10.github.io/jsOnlyToDo/)
+
 ## Table of Contents
 - [Summary](#Summary)
 - [Pre-Requisites](#Pre-Requisites)
