@@ -4,7 +4,8 @@
 - [Summary](#Summary)
 - [Pre-Requisites](#Pre-Requisites)
 - [Usage](#Usage)
-- [List of Broken Things](#List of Broken Things)
+- [List of Broken Things](#List-of-Broken-Things)
+- [List of Future Implementations](#List-of-Future-Implementations)
 ## Summary
 This is a ToDo list webpage using HTML CSS and JS(only basic DOM). 
 The ToDo list webpage has all the common functionality that you can expect from a To Do i.e. mark as complete, delete a ToDo, shuffle the order of list.
@@ -43,13 +44,13 @@ Each ToDo Task has 4 buttons : CheckBox, ❌ (delete) button, ⬆️ moveUp butt
   * To Move a task Up in the list, click on the ⬆️ button.
   * To Move a task Down in the list, click on the ⬇️ button.
 
-## List of Broken Things
+## List-of-Broken-Things
 * Lorem text at the bottom of ToDo tasks
 * *Responsiveness*
 * Home Tab cannot be deleted
 * data loss upon refresh
 
-## List of Future Implementations
+## List-of-Future-Implementations
 * fix List of Broken Things
 * Implement New ToDo Button on top left
 * Implement Dark Mode
