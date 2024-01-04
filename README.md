@@ -52,7 +52,7 @@ Each ToDo Task has 4 buttons : CheckBox, ❌ (delete) button, ⬆️ moveUp butt
 * *Responsiveness*
 * Home Tab cannot be deleted
 * data loss upon refresh
-* add button is broken
+* ~~add button is broken~~
 
 ## List-of-Future-Implementations
 * fix List of Broken Things

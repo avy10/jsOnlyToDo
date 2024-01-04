@@ -27,6 +27,7 @@ let footerElem = document.querySelector(".footer");
 
 const addToDoIFElem = document.getElementById("text-field");
 const toDoItemBoxHC = document.getElementsByClassName("todoItem");
+const addBtn = document.getElementById("add-button");
 
 //global functions
 const extractIndex = (str, len) => {
@@ -219,224 +220,231 @@ addNewListBtn.addEventListener("click", function () {
 });
 
 
+const addToDoTasksFN = function(){
+	let text = addToDoIFElem.value;
+
+	index = nonHiddenToDoContainer();
+	let currentContainer = currentListContainerHC[index];
+	let completedContainer = currentContainer.querySelector(".completed");
+	const notCompHC = currentContainer.getElementsByClassName("notComp");
+	const compHC = completedContainer.getElementsByClassName("comp");
+	const toDoItemsInCurrentContainerHC = currentContainer.getElementsByClassName("todoItem");
+
+	const idOfCurrentContainer = currentContainer.id;
+	// console.log("AVY LOOK AT THIS ", idOfCurrentContainer);
+
+	const newToDoItemBox = document.createElement("div");
+	newToDoItemBox.className = "todoItem navigationJS notComp"
+	newToDoItemBox.id = `todo${toDoItemsInCurrentContainerHC.length}`;
+	currentContainer.insertBefore(newToDoItemBox, completedContainer);
+	newToDoItemBox.classList.add(`TAB${idOfCurrentContainer}`)
+	newToDoItemBox.setAttribute("position", `${toDoItemsInCurrentContainerHC.length-1}`);
+
+	
+	const newCheckBtnDiv = document.createElement("div");
+	newCheckBtnDiv.classList.add("checkButtonDiv");
+	newToDoItemBox.appendChild(newCheckBtnDiv);
+
+	const newCheckBoxInput = document.createElement("input");
+	newCheckBoxInput.setAttribute("type", "checkbox");
+	newCheckBoxInput.classList.add("checkButton");
+	newCheckBtnDiv.appendChild(newCheckBoxInput);
+	newCheckBoxInput.id = `check${toDoItemsInCurrentContainerHC.length-1}`;
+	// EL DONE
+
+	const newDeleteBtn = document.createElement("button");
+	newDeleteBtn.textContent = "❌";
+	newCheckBtnDiv.appendChild(newDeleteBtn);
+	// EL DONE
+
+	const newToDoTextDiv = document.createElement("div");
+	newToDoItemBox.appendChild(newToDoTextDiv);
+	newToDoTextDiv.classList.add("todoText");
+
+	const newPTag = document.createElement("p");
+	newPTag.textContent = text;
+	newToDoTextDiv.appendChild(newPTag);
+
+	const newMoveDiv = document.createElement("div");
+	newMoveDiv.classList.add("moveDiv");
+	newToDoItemBox.appendChild(newMoveDiv);
+
+	const newUpBtn = document.createElement("button");
+	newUpBtn.classList.add("moveUpBtn");
+	newUpBtn.textContent = "⬆️";
+	newMoveDiv.appendChild(newUpBtn);
+	// EL DONE
+
+	const newDownBtn = document.createElement("button");
+	newDownBtn.classList.add("moveDownBtn");
+	newDownBtn.textContent = "⬇️";
+	newMoveDiv.appendChild(newDownBtn);
+	// EL DONE
+
+	newDeleteBtn.addEventListener("click", function () {
+		console.log("AVY WATHC THIS,,", currentContainer.contains(newToDoItemBox));
+		if(completedContainer.contains(newToDoItemBox)){
+			completedContainer.removeChild(newToDoItemBox);
+		} else {
+			currentContainer.removeChild(newToDoItemBox);
+		}
+		idUpdateTODOS(currentContainer);
+	});
+
+	newCheckBoxInput.addEventListener("click", function () {
+		newToDoTextDiv.classList.toggle("strikeTho");
+		// let position = extractIndex(newCheckBoxInput.id, 5);
+		let position = +newToDoItemBox.getAttribute("position");
+		if (newCheckBoxInput.checked) {
+			// VERIFIED
+			currentContainerOnDisplay.removeChild(newToDoItemBox);
+			completedContainer.appendChild(newToDoItemBox);
+			if (completedContainer.childElementCount > 0) {
+				completedContainer.classList.remove("hidden");
+			}
+			newToDoItemBox.classList.add("comp");
+			newToDoItemBox.classList.remove("notComp");
+		} else if (!newCheckBoxInput.checked) {
+			const temp = newToDoItemBox;
+			const tempID = temp.id;
+			const prevIndex = extractIndex(tempID, 4);
+			console.log("prevIndex is ", prevIndex);
+
+			if(notCompHC.length === 0) {
+				console.log("1st");
+				currentContainerOnDisplay.insertBefore(temp,completedContainer);
+				newToDoItemBox.classList.remove("comp");
+				newToDoItemBox.classList.add("notComp");
+			} else if(prevIndex === 0){
+				console.log("0th");
+				completedContainer.removeChild(temp);
+				currentContainerOnDisplay.insertBefore(temp, toDoItemsInCurrentContainerHC[0]);
+			} else if(prevIndex === notCompHC.length){
+				console.log("2nd");
+				//VERIFIED
+				const lastChild = toDoItemsInCurrentContainerHC[prevIndex-1];
+				const lastChildP = +lastChild?.getAttribute("position");
+				console.log("childzeroP for 2nd", lastChildP, "index", prevIndex);
+				completedContainer.removeChild(temp);
+				if(prevIndex > lastChildP) {
+					console.log("uno");
+					currentContainerOnDisplay.insertBefore(temp, completedContainer);
+				} else if(prevIndex < lastChildP){
+					console.log("dos");
+					currentContainerOnDisplay.insertBefore(temp,  lastChild);
+				}
+				newToDoItemBox.classList.remove("comp");
+				newToDoItemBox.classList.add("notComp");
+			} else if(prevIndex < notCompHC.length){
+				console.log("3rd")
+				const childZero = toDoItemsInCurrentContainerHC[prevIndex];
+				const childPlus = toDoItemsInCurrentContainerHC[prevIndex+1];
+				const childMinus = toDoItemsInCurrentContainerHC[prevIndex-1];
+
+				const childZeroP = +childZero?.getAttribute("position");
+				const childPlusP = +childPlus?.getAttribute("position");
+				const childMinusP = +childMinus?.getAttribute("position");
+
+				if(prevIndex < childZeroP && prevIndex < childMinusP){
+					console.log("A")
+					currentContainerOnDisplay.insertBefore(temp, childMinus);
+				} else if (prevIndex < childZeroP && prevIndex > childMinusP) {
+					console.log("B")
+					currentContainerOnDisplay.insertBefore(temp, childZero);
+				} else if(prevIndex > childZeroP && prevIndex < childPlusP){
+					console.log("C")
+					currentContainerOnDisplay.insertBefore(temp, childPlus);						
+				} else if(prevIndex > childZeroP && prevIndex > childPlusP){
+					console.log("D")
+					const childPlusPlus = toDoItemsInCurrentContainerHC[prevIndex+2];
+					currentContainerOnDisplay.insertBefore(temp, childPlusPlus);
+				}
+				newToDoItemBox.classList.remove("comp");
+				newToDoItemBox.classList.add("notComp");
+			} else if(prevIndex > notCompHC.length){
+
+				const lastChild = notCompHC[notCompHC.length-1];
+				console.log(lastChild);
+				const lastChildP = +lastChild.getAttribute("position");
+				console.log("childzeroP for 4th =>", lastChildP, "..index", prevIndex);
+				completedContainer.removeChild(temp);
+				if(prevIndex > lastChildP) {
+					console.log("uno");
+					currentContainerOnDisplay.insertBefore(temp, completedContainer);
+				} else if(prevIndex < lastChildP){
+					console.log("dos");
+					currentContainerOnDisplay.insertBefore(temp,  lastChild);
+				}
+
+
+				console.log("4th");
+				newToDoItemBox.classList.remove("comp");
+				newToDoItemBox.classList.add("notComp");
+			}
+
+			if (completedContainer.childElementCount == 0) {
+				completedContainer.classList.add("hidden");
+			}
+		}
+
+		// let toDoItemIndex = extractIndex()
+	});
+
+	newUpBtn.addEventListener("click", function(){
+		const currentPosition = +newToDoItemBox.getAttribute("position");
+		if(currentPosition === 0 ){
+
+		} else {
+			const elementAboveCurrent = notCompHC[currentPosition-1];
+			console.log(elementAboveCurrent);
+			console.log(newToDoItemBox.id, typeof newToDoItemBox.id);
+			currentContainer.removeChild(newToDoItemBox);
+			currentContainer.insertBefore(newToDoItemBox, elementAboveCurrent);
+			newToDoItemBox.removeAttribute("id");
+			newToDoItemBox.removeAttribute("position");
+			elementAboveCurrent.removeAttribute("id");
+			elementAboveCurrent.removeAttribute("position");
+			
+			newToDoItemBox.id = `todo${currentPosition - 1}`;
+			elementAboveCurrent.id = `todo${currentPosition}`;
+			newToDoItemBox.setAttribute("position", currentPosition-1)
+			elementAboveCurrent.setAttribute("position", currentPosition)
+		}
+	});
+
+	newDownBtn.addEventListener("click", function(){
+		const currentPosition = +newToDoItemBox.getAttribute("position");
+		if(currentPosition === notCompHC.length-1 ){
+			
+		} else {
+			const elementBelowCurrent = notCompHC[currentPosition+1];
+			console.log(elementBelowCurrent);
+			console.log(newToDoItemBox.id, typeof newToDoItemBox.id);
+			currentContainer.removeChild(elementBelowCurrent);
+			currentContainer.insertBefore(elementBelowCurrent, newToDoItemBox);
+			newToDoItemBox.removeAttribute("id");
+			newToDoItemBox.removeAttribute("position");
+			elementBelowCurrent.removeAttribute("id");
+			elementBelowCurrent.removeAttribute("position");
+			
+			newToDoItemBox.id = `todo${currentPosition + 1}`;
+			elementBelowCurrent.id = `todo${currentPosition}`;
+			newToDoItemBox.setAttribute("position", currentPosition+1)
+			elementBelowCurrent.setAttribute("position", currentPosition)
+		}
+	})
+
+	addToDoIFElem.value = "";
+}
+
 
 addToDoIFElem.addEventListener("keydown", function (keyEvent) {
 	let text = addToDoIFElem.value;
-
 	if (keyEvent.key === "Enter" && text !== "") {
-		index = nonHiddenToDoContainer();
-		let currentContainer = currentListContainerHC[index];
-		let completedContainer = currentContainer.querySelector(".completed");
-		const notCompHC = currentContainer.getElementsByClassName("notComp");
-		const compHC = completedContainer.getElementsByClassName("comp");
-		const toDoItemsInCurrentContainerHC = currentContainer.getElementsByClassName("todoItem");
-
-		const idOfCurrentContainer = currentContainer.id;
-		// console.log("AVY LOOK AT THIS ", idOfCurrentContainer);
-
-		const newToDoItemBox = document.createElement("div");
-		newToDoItemBox.className = "todoItem navigationJS notComp"
-		newToDoItemBox.id = `todo${toDoItemsInCurrentContainerHC.length}`;
-		currentContainer.insertBefore(newToDoItemBox, completedContainer);
-		newToDoItemBox.classList.add(`TAB${idOfCurrentContainer}`)
-		newToDoItemBox.setAttribute("position", `${toDoItemsInCurrentContainerHC.length-1}`);
-
-		
-		const newCheckBtnDiv = document.createElement("div");
-		newCheckBtnDiv.classList.add("checkButtonDiv");
-		newToDoItemBox.appendChild(newCheckBtnDiv);
-
-		const newCheckBoxInput = document.createElement("input");
-		newCheckBoxInput.setAttribute("type", "checkbox");
-		newCheckBoxInput.classList.add("checkButton");
-		newCheckBtnDiv.appendChild(newCheckBoxInput);
-		newCheckBoxInput.id = `check${toDoItemsInCurrentContainerHC.length-1}`;
-		// EL DONE
-
-		const newDeleteBtn = document.createElement("button");
-		newDeleteBtn.textContent = "❌";
-		newCheckBtnDiv.appendChild(newDeleteBtn);
-		// EL DONE
-
-		const newToDoTextDiv = document.createElement("div");
-		newToDoItemBox.appendChild(newToDoTextDiv);
-		newToDoTextDiv.classList.add("todoText");
-
-		const newPTag = document.createElement("p");
-		newPTag.textContent = text;
-		newToDoTextDiv.appendChild(newPTag);
-
-		const newMoveDiv = document.createElement("div");
-		newMoveDiv.classList.add("moveDiv");
-		newToDoItemBox.appendChild(newMoveDiv);
-
-		const newUpBtn = document.createElement("button");
-		newUpBtn.classList.add("moveUpBtn");
-		newUpBtn.textContent = "⬆️";
-		newMoveDiv.appendChild(newUpBtn);
-		// EL DONE
-
-		const newDownBtn = document.createElement("button");
-		newDownBtn.classList.add("moveDownBtn");
-		newDownBtn.textContent = "⬇️";
-		newMoveDiv.appendChild(newDownBtn);
-		// EL DONE
-
-		newDeleteBtn.addEventListener("click", function () {
-			console.log("AVY WATHC THIS,,", currentContainer.contains(newToDoItemBox));
-			if(completedContainer.contains(newToDoItemBox)){
-				completedContainer.removeChild(newToDoItemBox);
-			} else {
-				currentContainer.removeChild(newToDoItemBox);
-			}
-			idUpdateTODOS(currentContainer);
-		});
-
-		newCheckBoxInput.addEventListener("click", function () {
-			newToDoTextDiv.classList.toggle("strikeTho");
-			// let position = extractIndex(newCheckBoxInput.id, 5);
-			let position = +newToDoItemBox.getAttribute("position");
-			if (newCheckBoxInput.checked) {
-				// VERIFIED
-				currentContainerOnDisplay.removeChild(newToDoItemBox);
-				completedContainer.appendChild(newToDoItemBox);
-				if (completedContainer.childElementCount > 0) {
-					completedContainer.classList.remove("hidden");
-				}
-				newToDoItemBox.classList.add("comp");
-				newToDoItemBox.classList.remove("notComp");
-			} else if (!newCheckBoxInput.checked) {
-				const temp = newToDoItemBox;
-				const tempID = temp.id;
-				const prevIndex = extractIndex(tempID, 4);
-				console.log("prevIndex is ", prevIndex);
-
-				if(notCompHC.length === 0) {
-					console.log("1st");
-					currentContainerOnDisplay.insertBefore(temp,completedContainer);
-					newToDoItemBox.classList.remove("comp");
-					newToDoItemBox.classList.add("notComp");
-				} else if(prevIndex === 0){
-					console.log("0th");
-					completedContainer.removeChild(temp);
-					currentContainerOnDisplay.insertBefore(temp, toDoItemsInCurrentContainerHC[0]);
-				} else if(prevIndex === notCompHC.length){
-					console.log("2nd");
-					//VERIFIED
-					const lastChild = toDoItemsInCurrentContainerHC[prevIndex-1];
-					const lastChildP = +lastChild?.getAttribute("position");
-					console.log("childzeroP for 2nd", lastChildP, "index", prevIndex);
-					completedContainer.removeChild(temp);
-					if(prevIndex > lastChildP) {
-						console.log("uno");
-						currentContainerOnDisplay.insertBefore(temp, completedContainer);
-					} else if(prevIndex < lastChildP){
-						console.log("dos");
-						currentContainerOnDisplay.insertBefore(temp,  lastChild);
-					}
-					newToDoItemBox.classList.remove("comp");
-					newToDoItemBox.classList.add("notComp");
-				} else if(prevIndex < notCompHC.length){
-					console.log("3rd")
-					const childZero = toDoItemsInCurrentContainerHC[prevIndex];
-					const childPlus = toDoItemsInCurrentContainerHC[prevIndex+1];
-					const childMinus = toDoItemsInCurrentContainerHC[prevIndex-1];
-
-					const childZeroP = +childZero?.getAttribute("position");
-					const childPlusP = +childPlus?.getAttribute("position");
-					const childMinusP = +childMinus?.getAttribute("position");
-
-					if(prevIndex < childZeroP && prevIndex < childMinusP){
-						console.log("A")
-						currentContainerOnDisplay.insertBefore(temp, childMinus);
-					} else if (prevIndex < childZeroP && prevIndex > childMinusP) {
-						console.log("B")
-						currentContainerOnDisplay.insertBefore(temp, childZero);
-					} else if(prevIndex > childZeroP && prevIndex < childPlusP){
-						console.log("C")
-						currentContainerOnDisplay.insertBefore(temp, childPlus);						
-					} else if(prevIndex > childZeroP && prevIndex > childPlusP){
-						console.log("D")
-						const childPlusPlus = toDoItemsInCurrentContainerHC[prevIndex+2];
-						currentContainerOnDisplay.insertBefore(temp, childPlusPlus);
-					}
-					newToDoItemBox.classList.remove("comp");
-					newToDoItemBox.classList.add("notComp");
-				} else if(prevIndex > notCompHC.length){
-
-					const lastChild = notCompHC[notCompHC.length-1];
-					console.log(lastChild);
-					const lastChildP = +lastChild.getAttribute("position");
-					console.log("childzeroP for 4th =>", lastChildP, "..index", prevIndex);
-					completedContainer.removeChild(temp);
-					if(prevIndex > lastChildP) {
-						console.log("uno");
-						currentContainerOnDisplay.insertBefore(temp, completedContainer);
-					} else if(prevIndex < lastChildP){
-						console.log("dos");
-						currentContainerOnDisplay.insertBefore(temp,  lastChild);
-					}
-
-
-					console.log("4th");
-					newToDoItemBox.classList.remove("comp");
-					newToDoItemBox.classList.add("notComp");
-				}
-
-				if (completedContainer.childElementCount == 0) {
-					completedContainer.classList.add("hidden");
-				}
-			}
-
-			// let toDoItemIndex = extractIndex()
-		});
-
-		newUpBtn.addEventListener("click", function(){
-			const currentPosition = +newToDoItemBox.getAttribute("position");
-			if(currentPosition === 0 ){
-
-			} else {
-				const elementAboveCurrent = notCompHC[currentPosition-1];
-				console.log(elementAboveCurrent);
-				console.log(newToDoItemBox.id, typeof newToDoItemBox.id);
-				currentContainer.removeChild(newToDoItemBox);
-				currentContainer.insertBefore(newToDoItemBox, elementAboveCurrent);
-				newToDoItemBox.removeAttribute("id");
-				newToDoItemBox.removeAttribute("position");
-				elementAboveCurrent.removeAttribute("id");
-				elementAboveCurrent.removeAttribute("position");
-				
-				newToDoItemBox.id = `todo${currentPosition - 1}`;
-				elementAboveCurrent.id = `todo${currentPosition}`;
-				newToDoItemBox.setAttribute("position", currentPosition-1)
-				elementAboveCurrent.setAttribute("position", currentPosition)
-			}
-		});
-
-		newDownBtn.addEventListener("click", function(){
-			const currentPosition = +newToDoItemBox.getAttribute("position");
-			if(currentPosition === notCompHC.length-1 ){
-				
-			} else {
-				const elementBelowCurrent = notCompHC[currentPosition+1];
-				console.log(elementBelowCurrent);
-				console.log(newToDoItemBox.id, typeof newToDoItemBox.id);
-				currentContainer.removeChild(elementBelowCurrent);
-				currentContainer.insertBefore(elementBelowCurrent, newToDoItemBox);
-				newToDoItemBox.removeAttribute("id");
-				newToDoItemBox.removeAttribute("position");
-				elementBelowCurrent.removeAttribute("id");
-				elementBelowCurrent.removeAttribute("position");
-				
-				newToDoItemBox.id = `todo${currentPosition + 1}`;
-				elementBelowCurrent.id = `todo${currentPosition}`;
-				newToDoItemBox.setAttribute("position", currentPosition+1)
-				elementBelowCurrent.setAttribute("position", currentPosition)
-			}
-		})
-
-		addToDoIFElem.value = "";
+		addToDoTasksFN();
 	} else if (keyEvent.key === "Escape") {
 		addToDoIFElem.value = "";
 	}
 });
+
+addBtn.addEventListener("click", addToDoTasksFN);
